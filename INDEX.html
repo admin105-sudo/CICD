@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>QR Attendance System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- QR Scanner Library -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Card */
+.container {
+    background: white;
+    width: 380px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    text-align: center;
+    animation: slideIn 1s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    color: #5a2ea6;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #555;
+    font-size: 14px;
+}
+
+/* Scanner box */
+#reader {
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 3px solid #764ba2;
+}
+
+/* Result */
+#result {
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+    0% { transform: scale(0.8); }
+    100% { transform: scale(1); }
+}
+
+/* Footer */
+.footer {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #888;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>QR Attendance System</h2>
+    <p>Scan your QR code to mark attendance</p>
+
+    <div id="reader"></div>
+    <div id="result"></div>
+
+    <div class="footer">
+        Cloud Based | AWS Lambda | DynamoDB
+    </div>
+</div>
+
+<script>
+const apiUrl = "YOUR_API_GATEWAY_URL_HERE"; // 🔴 replace this
+
+function onScanSuccess(decodedText) {
+    document.getElementById("result").innerHTML =
+        "📡 Processing attendance...";
+
+    fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ student_id: decodedText })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const msg = data.body.message;
+        const result = document.getElementById("result");
+
+        if (msg.includes("already")) {
+            result.style.color = "red";
+            result.innerHTML = "❌ " + msg;
+        } else {
+            result.style.color = "green";
+            result.innerHTML = "✅ " + msg;
+        }
+    })
+    .catch(() => {
+        document.getElementById("result").innerHTML =
+            "⚠️ Server error";
+    });
+
+    html5QrcodeScanner.clear();
+}
+
+/* Start QR Scanner */
+const html5QrcodeScanner = new Html5QrcodeScanner(
+    "reader",
+    { fps: 10, qrbox: 250 }
+);
+html5QrcodeScanner.render(onScanSuccess);
+const apiUrl = "https://2pt3b5f2u7.execute-api.us-east-1.amazonaws.com/attendance";
+
+</script>
+
+</body>
+</html>
