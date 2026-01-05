@@ -1,0 +1,124 @@
+/* ===== Global Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== Background Animation ===== */
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: gradientMove 8s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===== Main Card ===== */
+.container {
+  background: #ffffff;
+  width: 90%;
+  max-width: 420px;
+  padding: 30px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: popIn 0.8s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== Title ===== */
+h1 {
+  color: #5a4fcf;
+  margin-bottom: 8px;
+  font-size: 26px;
+}
+
+.subtitle {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* ===== QR Area ===== */
+.qr-box {
+  border: 2px dashed #5a4fcf;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(90,79,207,0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(90,79,207,0); }
+  100% { box-shadow: 0 0 0 0 rgba(90,79,207,0); }
+}
+
+/* ===== Video ===== */
+video {
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+/* ===== Button ===== */
+button {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* ===== Status Text ===== */
+#status {
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ===== Footer ===== */
+.footer {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* ===== Mobile Friendly ===== */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 22px;
+  }
+}
