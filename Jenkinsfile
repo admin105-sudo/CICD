@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "cicd-app"          // DockerHub repo name
+        IMAGE_NAME = "cicd-app"   // DockerHub repo name
         IMAGE_TAG  = "latest"
     }
 
@@ -15,15 +15,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                sh '''
-                  docker build -t $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG .
-                '''
-            }
-        }
-
-        stage('DockerHub Login') {
+        stage('Build & Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
@@ -31,27 +23,22 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
+                      echo "Docker user is $DOCKER_USER"
+                      docker build -t $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG .
                       echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                      docker push $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
                     '''
                 }
-            }
-        }
-
-        stage('Push Image to DockerHub') {
-            steps {
-                sh '''
-                  docker push $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
-                '''
             }
         }
     }
 
     post {
         success {
-            echo 'Docker image pushed successfully to DockerHub ✅'
+            echo 'Docker image built & pushed successfully ✅'
         }
         failure {
-            echo 'Build or Push failed ❌'
+            echo 'Docker build or push failed ❌'
         }
     }
 }
